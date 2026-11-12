@@ -1,10 +1,10 @@
-# Persona 5 — Knowledge Engine
+# Knowledge Engine - João Espioni
 
-Projeto de Lógica e Matemática Discreta: uma base de conhecimento sobre **Persona 5 Royal**, com ETL em Python e inferência em Prolog.
+Projeto de Lógica e Matemática Discreta usando uma base de conhecimento sobre o melhor JRPG de todos os tempos **Persona 5 Royal**!
 
 A base contém **232 Personas, 24 arcanas e 10 campos selecionados**. Cinco perguntas exploram agrupamento, médias, ordenação, comparação entre registros e composição de regras. Os dados e os arquivos gerados estão incluídos: não é necessário depender da API para reproduzir a entrega.
 
-## Executar sem instalar nada
+## Como executar
 
 1. Abra [knowledge_base.pl](knowledge_base.pl) neste repositório e clique em **Raw** para copiar o arquivo inteiro.
 2. Acesse o [SWISH — Prolog online](https://swish.swi-prolog.org/).
@@ -15,17 +15,11 @@ A base contém **232 Personas, 24 arcanas e 10 campos selecionados**. Cinco perg
 pergunta(2, Resposta).
 ```
 
-Troque `2` por um número entre `1` e `5`. Para imprimir todas as respostas completas:
+Troque `2` por um número entre `1` e `5`. Para imprimir todas as respostas completas use:
 
 ```prolog
 responder_todas.
 ```
-
-O ponto final faz parte da consulta. Não coloque `?-` no código do programa. Caso a interface abrevie uma lista com `...`, use `responder_todas.` para ver a saída inteira.
-
-Se estiver usando uma cópia antiga e aparecer `No permission to encoding stream`, remova a linha `:- encoding(utf8).` do início de `knowledge_base.pl` e execute novamente. A versão atual do ETL já gera esse arquivo sem a diretiva: o SWISH recebe texto Unicode em memória.
-
-**O VS Code é opcional:** ele serve para editar os arquivos, mas não é necessário para executar o projeto no SWISH.
 
 ## Fonte e recorte dos dados
 
