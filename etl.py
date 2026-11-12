@@ -51,6 +51,7 @@ def atom(text):
     """Cria átomos simples: Shiisaa -> shiisaa; Obariyon -> obariyon."""
     if not isinstance(text, str) or not text.strip():
         raise ValueError("Nome/arcana deve ser texto não vazio")
+    # Remove acentos e separadores para formar átomos Prolog válidos.
     ascii_text = unicodedata.normalize("NFKD", text).encode("ascii", "ignore").decode()
     result = re.sub(r"[^a-z0-9]+", "_", ascii_text.lower()).strip("_")
     if not result:
@@ -68,6 +69,7 @@ def transform(records):
     seen_names = set()
     arcanas = {}
     for index, record in enumerate(records, 1):
+        # Valida cada registro antes de gerar os fatos.
         if not isinstance(record, dict) or any(key not in record for key in FIELDS):
             raise ValueError(f"Registro {index}: faltam campos obrigatórios")
         name = atom(record["name"])
@@ -167,10 +169,12 @@ def main(argv=None):
                 json.dumps(metadata, ensure_ascii=False, indent=2) + "\n", encoding="utf-8",
             )
         else:
+            # Confere se o snapshot ainda corresponde à sua proveniência.
             metadata = json.loads((ROOT / "data" / "origem.json").read_text(encoding="utf-8"))
             if metadata["sha256"] != digest or metadata["records"] != len(rows):
                 raise ValueError("O snapshot não corresponde ao registro de origem")
         if args.verificar:
+            # Verifica se os arquivos gerados estão sincronizados.
             outdated = [name for name, text in generated.items()
                         if not (ROOT / name).exists() or (ROOT / name).read_text(encoding="utf-8") != text]
             if outdated:
