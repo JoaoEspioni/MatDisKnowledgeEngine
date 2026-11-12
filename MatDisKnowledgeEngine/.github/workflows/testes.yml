@@ -1,0 +1,29 @@
+name: Testes Python e Prolog
+
+on: [push, pull_request, workflow_dispatch]
+
+permissions:
+  contents: read
+
+jobs:
+  testes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Instalar SWI-Prolog
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y swi-prolog-nox
+      - name: Validar ETL e arquivos gerados
+        run: |
+          python -m unittest discover -s tests -v
+          python etl.py --verificar
+      - name: Testar regras e consultas
+        run: swipl -q -s tests/test_regras.pl -g run_tests -t halt
+      - name: Testar arquivo independente para SWISH
+        run: swipl -q -s knowledge_base.pl -g responder_todas -t halt
+      - name: Testar carregamento de texto em memória
+        run: swipl -q -s tests/test_swish.pl -g run_tests -t halt
