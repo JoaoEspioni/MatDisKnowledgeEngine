@@ -1,13 +1,14 @@
-% Regras escritas manualmente; os dados são gerados pelo ETL.
 % As consultas públicas recebem limites inteiros e DLC = sim, nao ou todos.
 :- use_module(library(lists)).
 
 % --- Predicados auxiliares ---
 
+% Define quais valores de DLC entram no filtro.
 dlc_permitido(todos, _).
 dlc_permitido(nao, nao).
 dlc_permitido(sim, sim).
 
+% Seleciona Personas pelo nível máximo e pelo filtro de DLC.
 selecionada(MaxNivel, DLC, Nome, Arcana, Nivel, F, M, R, A, S, Fraquezas) :-
     integer(MaxNivel), MaxNivel >= 0,
     memberchk(DLC, [todos, nao, sim]),
@@ -15,17 +16,20 @@ selecionada(MaxNivel, DLC, Nome, Arcana, Nivel, F, M, R, A, S, Fraquezas) :-
     Nivel =< MaxNivel,
     dlc_permitido(DLC, Tipo).
 
+% Lista cada arcana sem repetir valores.
 arcana(Arcana) :-
     findall(A, persona(_, A, _, _, _, _, _, _, _, _), Arcanas),
     sort(Arcanas, Unicas),
     member(Arcana, Unicas).
 
+% Calcula a média de uma lista não vazia.
 media(Valores, Media) :-
     Valores = [_|_],
     sum_list(Valores, Soma),
     length(Valores, Quantidade),
     Media is Soma / Quantidade.
 
+% Mantém somente os primeiros N resultados.
 primeiros(0, _, []) :- !.
 primeiros(_, [], []) :- !.
 primeiros(N, [X|Xs], [X|Ys]) :-
@@ -33,6 +37,7 @@ primeiros(N, [X|Xs], [X|Ys]) :-
     Proximo is N - 1,
     primeiros(Proximo, Xs, Ys).
 
+% Retira as chaves após a ordenação.
 valores_pares([], []).
 valores_pares([_-Valor|Pares], [Valor|Valores]) :-
     valores_pares(Pares, Valores).
